@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   imports =
@@ -123,6 +123,8 @@
     };
   };
 
+  services.auto-cpufreq.enable = true;
+
   programs.bash = {
     interactiveShellInit = ''
       if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
@@ -132,6 +134,21 @@
       fi
     '';
   };
+
+  security.pki.certificateFiles = [
+    ./ssl/certs/ca/kosik-internal-ca.pem
+    ./ssl/certs/ca/kosikca.pem
+  ];
+
+#  systemd.package = pkgs.systemd.overrideAttrs (finalAttrs: previousAttrs: {
+#	version = "255.4";
+#	src = pkgs.fetchFromGitHub {
+#	  owner = "systemd";
+#	  repo = "systemd-stable";
+#	  rev = "v255.4";
+#	  hash = "sha256-P1mKq+ythrv8MU7y2CuNtEx6qCDacugzfsPRZL+NPys=";
+#	};
+#  });
 
   # Open ports in the firewall.
    networking.firewall.allowedTCPPorts = [ 9003 ];

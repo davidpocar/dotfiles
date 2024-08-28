@@ -27,6 +27,7 @@
     unzip
     curl
     wget
+    openssl
 
     flameshot
     libreoffice-fresh
