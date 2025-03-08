@@ -176,7 +176,7 @@ nnoremap gx gd
 map <leader>zz <Action>(TogglePresentationMode)
 
 " Vim search is simply outclassed here
-map / <Action>(Find)
+" map / <Action>(Find)
 
 "Quickly edit/reload the vimrc file
 nmap <leader>ve :e ~/.ideavimrc<CR>

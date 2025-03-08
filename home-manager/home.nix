@@ -10,11 +10,7 @@
     homeDirectory = "/home/david";
   };
 
-  fonts.fontconfig.enable = true;
-
   home.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "FiraCode" "NerdFontsSymbolsOnly" ]; })
-
     kitty
     krita
 
@@ -40,15 +36,22 @@
     xclip
     xdg-utils
 
+	php83
+	k6
+	nodejs
+	yarn
+
     chromium
+    brave
     jetbrains.phpstorm
     postman
+    kubernetes-helm
 
     docker-compose
     gnumake
     mkcert
 
-    php
+    jq
   ];
 
   programs.home-manager.enable = true;

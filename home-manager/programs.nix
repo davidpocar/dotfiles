@@ -39,7 +39,7 @@
         stat = "!git diff --stat $(git merge-base HEAD \"$REVIEW_BASE\")";
         what = "!git config --get-regexp alias";
         fixup = "!git log -n 50 --pretty=format:'%h %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup";
-        broom = "!git fetch -p ; git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D";
+        sweep = "!git fetch -p ; git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D";
       };
       delta = {
         enable = true;
@@ -70,11 +70,15 @@
         pull = { ff = "only"; };
         commit = { verbose = true; };
         push = { autoSetupRemote = true; };
+        safe.directory = "/k3w";
       };
     };
 
     zsh = {
       enable = true;
+      shellAliases = {
+		rebuild = "sudo nixos-rebuild switch --flake ~/dotfiles";
+      };
       plugins = [
         {
           name = "powerlevel10k";
@@ -113,7 +117,7 @@ shell zsh
 map f1 toggle_layout stack
 
 # window_border_width 0
-
+background_opacity 0.95
 # draw_minimal_borders yes
 
 # Remove close window confirm

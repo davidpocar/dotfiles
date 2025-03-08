@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   imports =
@@ -42,12 +42,21 @@
     LC_TIME = "cs_CZ.UTF-8";
   };
 
+  services.fprintd = {
+    enable = true;
+    package = pkgs.fprintd-tod;
+    tod.enable = true;
+	# Search for "libfprint" in packages to find other drivers
+	tod.driver = pkgs.libfprint-2-tod1-broadcom;
+  };
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
-  services.displayManager.defaultSession = "plasmawayland";
+#  services.displayManager.defaultSession = "plasmawayland";
+#  services.desktopManager.plasma6.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
 
   # Configure keymap in X11
@@ -59,9 +68,11 @@
 
   hardware.bluetooth.enable = true;
 
+  hardware.keyboard.zsa.enable = true;
+
   # Enable sound with pipewire.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
+#  sound.enable = true;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -83,7 +94,7 @@
   users.users.david = {
     isNormalUser = true;
     description = "david";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "plugdev" ];
   };
 
   # Allow unfree packages
@@ -110,7 +121,21 @@
 
   # List services that you want to enable:
 
-  virtualisation.docker.enable = true;
+  virtualisation = {
+    docker = {
+      enable = true;
+	  extraOptions = ''
+	    --insecure-registry artifactory.shared.kosik.systems
+	    --insecure-registry artifactory.shared.kosik.systems:443
+	    --insecure-registry artifactory-cr-proxy.p.shared.ne.kosik.systems
+	    --insecure-registry artifactory-cr-proxy.p.shared.ne.kosik.systems:443
+	  '';
+    };
+  };
+
+  fonts.packages = [
+
+  ] ++ builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
 
   # Enable the OpenSSH daemon.
   programs.ssh.startAgent = false;
@@ -123,7 +148,7 @@
     };
   };
 
-  services.auto-cpufreq.enable = true;
+#  services.auto-cpufreq.enable = true;
 
   programs.bash = {
     interactiveShellInit = ''
