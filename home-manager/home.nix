@@ -1,9 +1,6 @@
 { pkgs, ... }: {
 
-  imports = [
-    ./programs.nix
-    ./ideavim.nix
-  ];
+  imports = [ ./programs.nix ./ideavim.nix ];
 
   home = {
     username = "david";
@@ -14,9 +11,9 @@
     kitty
     krita
 
-	zsh-forgit
-	zsh-fzf-history-search
-	zsh-fzf-tab
+    zsh-forgit
+    zsh-fzf-history-search
+    zsh-fzf-tab
 
     neofetch
     zip
@@ -32,14 +29,14 @@
     iotop
     iftop
 
-	libxml2
+    libxml2
     xclip
     xdg-utils
 
-	php83
-	k6
-	nodejs
-	yarn
+    php83
+    k6
+    nodejs
+    yarn
 
     chromium
     brave
@@ -52,6 +49,8 @@
     mkcert
 
     jq
+
+    nixfmt-rfc-style
   ];
 
   programs.home-manager.enable = true;

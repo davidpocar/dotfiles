@@ -1,185 +1,55 @@
 {
   home.file.".ideavimrc".text = ''
-"" Difference between all the different maps:
-""   https://stackoverflow.com/questions/3776117/what-is-the-difference-between-the-remap-noremap-nnoremap-and-vnoremap-mapping
-"" Ideavim actionlist:
-""   https://gist.github.com/zchee/9c78f91cc5ad771c1f5d
-"" List of supported plugins:
-""   https://github.com/JetBrains/ideavim/wiki/Emulated-plugins
-""   https://betterprogramming.pub/the-essential-ideavim-plugins-f939b4325180
+    "" Difference between all the different maps:
+    ""   https://stackoverflow.com/questions/3776117/what-is-the-difference-between-the-remap-noremap-nnoremap-and-vnoremap-mapping
+    "" Ideavim actionlist:
+    ""   https://gist.github.com/zchee/9c78f91cc5ad771c1f5d
+    "" List of supported plugins:
+    ""   https://github.com/JetBrains/ideavim/wiki/Emulated-plugins
+    ""   https://betterprogramming.pub/the-essential-ideavim-plugins-f939b4325180
 
-"" Good Keyboard Shortcut Rebinds:
-""<Up> -> <A-k>
-""<Down> -> <A-j>
-""<Alt+Insert> -> <A+n>
-""  ---
-""Manage Projects -> <A-p>
-""ActivateTerminalToolWindow -> <A-t>
-""Hide Active Window -> Alt + Shift + h
-""  ---
+    set easymotion
+    set NERDTree
+    set surround
+    set multiple-cursors
+    set commentary
+    set ReplaceWithRegister
+    set argtextobj
+    set exchange
+    set textobj-entire
+    set highlightedyank
+    set vim-paragraph-motion
+    set matchit
+    set quickscope
+    set mini-ai
+    set which-key
+    set peekaboo
+    set functiontextobj
+    set switch
 
-"" Set Handlers
-sethandler <S-Tab> a:vim
-sethandler <C-A> a:ide
-sethandler <C-C> a:vim
-sethandler <C-D> a:vim
-sethandler <C-H> a:vim
-sethandler <C-I> a:vim
-sethandler <C-J> a:vim
-sethandler <A-J> a:vim
-sethandler <C-N> a:vim
-sethandler <C-O> a:vim
-sethandler <C-P> a:vim
-sethandler <C-Q> a:vim
-sethandler <C-T> a:vim
-sethandler <C-U> a:vim
-sethandler <C-V> a:vim
+    let g:highlightedyank_highlight_duration = "500"
+    let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
-let mapleader = " "
+    " Remap multiple-cursors shortcuts to match terryma/vim-multiple-cursors
+    nmap <C-n> <Plug>NextWholeOccurrence
+    xmap <C-n> <Plug>NextWholeOccurrence
+    nmap g<C-n> <Plug>NextOccurrence
+    xmap g<C-n> <Plug>NextOccurrence
+    xmap <C-x> <Plug>SkipOccurrence
+    xmap <C-p> <Plug>RemoveOccurrence
 
-"" Emulated plugins
+    " Map to <leader>s and <leader>S
+    nnoremap <C-s> :Switch<CR>
+    nnoremap <C-S-s> :SwitchReverse<CR>
 
-" use 'c|d|yia' to c|d|y inner arguments
-set argtextobj
-let g:argtextobj_pairs="(:),{:},<:>,[:]"
-set commentary
-set highlightedyank
-set NERDTree
-set surround
-set textobj-entire
-set which-key
-set quickscope
-let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-let g:qs_primary_color = '#e64553'
-let g:qs_secondary_color = '#fe640b'
-let g:qs_accepted_chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '{', '}', '[', ']', '<', '>']
+    " Or use - and +
+    nnoremap - :Switch<CR>
+    nnoremap + :SwitchReverse<CR>
 
-"" Options
-set clipboard+=unnamedplus
-set notimeout
-set smartcase
-set incsearch
-"" set relativenumber
-set number
-set ideajoin
-set showcmd
-set showmode
-" Stay in the mode in which the editing started
-set idearefactormode=keep
+    " disable the timeout option
+    "" set notimeout
+    " increase the timeoutlen (default: 1000), don't add space around the equal sign
+    set timeoutlen=5000
 
-" No annoying sound on errors
-set visualbell
-set tm=500
-
-" Set scrolloff
-set scrolloff=8
-
-"" Mappings
-" 0 -> first non-blank character
-map 0 ^
-
-" Center buffer when navigating
-nmap <C-u> <C-u>zz
-nmap <C-d> <C-d>zz
-nmap n nzzzv
-nmap N Nzzzv
-
-" Workaround for unifying navigation history:
-" https://youtrack.jetbrains.com/issue/VIM-44/Unify-navigation-history-between-ideavim-and-idea"
-nmap <C-o> <Action>(Back)
-nmap <C-i> <Action>(Forward)
-
-" Navigate project errors
-map [d <Action>(GotoPreviousError)
-map ]d <Action>(GotoNextError)
-
-" Navigate git changes
-map [c <Action>(VcsShowPrevChangeMarker)
-map ]c <Action>(VcsShowNextChangeMarker)
-
-" Navigate methods
-map [m <Action>(MethodUp)
-map ]m <Action>(MethodDown)
-
-" Show hoverdoc
-map H <Action>(ShowErrorDescription)
-
-" Shortcutting split navigation
-map <a-h> <C-w>h
-map <a-j> <C-w>j
-map <a-k> <C-w>k
-map <a-l> <C-w>l
-
-" Bye bye
-map <leader>q <Action>(CloseContent)
-map <leader>Q <Action>(CloseAllEditors)
-map <leader>h <Action>(HideAllWindows)
-
-" Focus project window
-map <leader>e :NERDTreeFocus<CR>
-map <C-c> <Esc>
-
-" File navigation
-map <leader>ff <Action>(GotoFile)
-map <leader>fg <Action>(FindInPath)
-map <leader>fm <Action>(MainMenu)
-map <leader>fp <Action>(ManageRecentProjects)
-map <leader><leader> <Action>(MainMenu)
-
-" Replace
-map <leader>fr <Action>(ReplaceInPath)
-
-" Tab navigation
-map <Tab> <Action>(NextTab)
-map <S-Tab> <Action>(PreviousTab)
-
-" Keep visual selection
-vnoremap < <gv
-vnoremap > >gv
-
-" LSP stuffs
-map <leader>ro <Action>(OptimizeImports)
-map <leader>rf <Action>(ReformatCode)
-map <leader>rr <Action>(RenameElement)
-map <leader>ra <Action>(ShowIntentionActions)
-map gt <Action>(GotoTest)
-map gs <Action>(GotoSuperMethod)
-map gI <Action>(GotoImplementation)
-
-" Debugging stuffs
-map <leader>dt <Action>(ToggleLineBreakpoint)
-map <leader>db <Action>(ViewBreakpoints)
-map <leader>ds <Action>(ContextDebug)
-map <leader>df <Action>(ChooseDebugConfiguration)
-map <leader>rs <Action>(ContextRun)
-map <leader>rc <Action>(RunClass)
-map <leader>rf <Action>(ChooseRunConfiguration)
-
-" Git stuffs
-map <leader>g <Action>(ActivateCommitToolWindow)
-
-" Hello terminal :D
-map <leader>t <Action>(ActivateTerminalToolWindow)
-
-" Open ideavimrc
-map <leader>; :e ~/.config/ideavim/ideavimrc<CR>
-
-" Alt+j/k for autocompletion popup
-inoremap <A-j> <C-n>
-inoremap <A-k> <C-p>
-
-" Shhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
-" https://youtrack.jetbrains.com/issue/VIM-1341/gx-should-open-selection-in-browser
-nnoremap gx gd
-
-" Zen mode
-map <leader>zz <Action>(TogglePresentationMode)
-
-" Vim search is simply outclassed here
-" map / <Action>(Find)
-
-"Quickly edit/reload the vimrc file
-nmap <leader>ve :e ~/.ideavimrc<CR>
-nmap <leader>vr :so ~/.ideavimrc<CR>
   '';
 }

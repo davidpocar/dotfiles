@@ -1,10 +1,15 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -19,9 +24,8 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
-  networking.extraHosts =
-  ''
-  127.0.0.1 k3w.l
+  networking.extraHosts = ''
+    127.0.0.1 k3w.l
   '';
 
   # Set your time zone.
@@ -46,8 +50,8 @@
     enable = true;
     package = pkgs.fprintd-tod;
     tod.enable = true;
-	# Search for "libfprint" in packages to find other drivers
-	tod.driver = pkgs.libfprint-2-tod1-broadcom;
+    # Search for "libfprint" in packages to find other drivers
+    tod.driver = pkgs.libfprint-2-tod1-broadcom;
   };
 
   # Enable the X11 windowing system.
@@ -55,9 +59,8 @@
 
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
-#  services.displayManager.defaultSession = "plasmawayland";
-#  services.desktopManager.plasma6.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
+#  services.desktopManager.plasma6.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb.layout = "us,cz";
@@ -65,13 +68,14 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  services.orca.enable = false;
 
   hardware.bluetooth.enable = true;
 
   hardware.keyboard.zsa.enable = true;
 
   # Enable sound with pipewire.
-#  sound.enable = true;
+  #  sound.enable = true;
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -94,11 +98,21 @@
   users.users.david = {
     isNormalUser = true;
     description = "david";
-    extraGroups = [ "networkmanager" "wheel" "docker" "plugdev" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "docker"
+      "plugdev"
+    ];
   };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.overlays = [
+    (final: prev: {
+      nvchad = inputs.nvchad4nix.packages."${pkgs.system}".nvchad;
+    })
+  ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -109,7 +123,10 @@
     options = "--delete-older-than 7d";
   };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -124,12 +141,7 @@
   virtualisation = {
     docker = {
       enable = true;
-	  extraOptions = ''
-	    --insecure-registry artifactory.shared.kosik.systems
-	    --insecure-registry artifactory.shared.kosik.systems:443
-	    --insecure-registry artifactory-cr-proxy.p.shared.ne.kosik.systems
-	    --insecure-registry artifactory-cr-proxy.p.shared.ne.kosik.systems:443
-	  '';
+      extraOptions = "  --insecure-registry artifactory.shared.kosik.systems\n  --insecure-registry artifactory.shared.kosik.systems:443\n  --insecure-registry artifactory-cr-proxy.p.shared.ne.kosik.systems\n  --insecure-registry artifactory-cr-proxy.p.shared.ne.kosik.systems:443\n";
     };
   };
 
@@ -148,7 +160,7 @@
     };
   };
 
-#  services.auto-cpufreq.enable = true;
+  #  services.auto-cpufreq.enable = true;
 
   programs.bash = {
     interactiveShellInit = ''
@@ -165,18 +177,18 @@
     ./ssl/certs/ca/kosikca.pem
   ];
 
-#  systemd.package = pkgs.systemd.overrideAttrs (finalAttrs: previousAttrs: {
-#	version = "255.4";
-#	src = pkgs.fetchFromGitHub {
-#	  owner = "systemd";
-#	  repo = "systemd-stable";
-#	  rev = "v255.4";
-#	  hash = "sha256-P1mKq+ythrv8MU7y2CuNtEx6qCDacugzfsPRZL+NPys=";
-#	};
-#  });
+  #  systemd.package = pkgs.systemd.overrideAttrs (finalAttrs: previousAttrs: {
+  #	version = "255.4";
+  #	src = pkgs.fetchFromGitHub {
+  #	  owner = "systemd";
+  #	  repo = "systemd-stable";
+  #	  rev = "v255.4";
+  #	  hash = "sha256-P1mKq+ythrv8MU7y2CuNtEx6qCDacugzfsPRZL+NPys=";
+  #	};
+  #  });
 
   # Open ports in the firewall.
-   networking.firewall.allowedTCPPorts = [ 9003 ];
+  networking.firewall.allowedTCPPorts = [ 9003 ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
