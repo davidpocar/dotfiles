@@ -1,126 +1,19 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
+  imports = [
+    inputs.nvchad4nix.homeManagerModule
+  ];
+
   programs = {
-    neovim = {
+    nvchad = {
       enable = true;
-      defaultEditor = true;
-      plugins = with pkgs.vimPlugins; [
-        # LSP support
-        nvim-lspconfig
-
-        # Auto-completion
-        nvim-cmp
-        cmp-nvim-lsp
-        luasnip
-        cmp_luasnip
-
-        # Code formatting
-        conform-nvim
-
-        # Diagnostics UI
-        telescope-nvim
-        trouble-nvim
-
-        # File explorer
-        nerdtree
-
-        # Git integration
-        gitsigns-nvim
-      ];
       extraPackages = with pkgs; [
-        nixd # Use nixd as the Nix LSP
-        nixfmt-rfc-style # Use nixfmt-rfc-style instead of nixfmt
-        git # Ensure git is installed
+        nixd
       ];
       extraConfig = ''
-        lua << EOF
         -- Setup LSP (nixd)
         require("lspconfig").nixd.setup {}
-
-        -- Setup auto-completion
-        local cmp = require("cmp")
-        cmp.setup({
-          mapping = cmp.mapping.preset.insert({
-            ["<C-Space>"] = cmp.mapping.complete(),
-            ["<CR>"] = cmp.mapping.confirm({ select = true }),
-          }),
-          sources = cmp.config.sources({
-            { name = "nvim_lsp" },
-            { name = "luasnip" }
-          })
-        })
-
-        -- Setup code formatting
-        require("conform").setup({
-          formatters = {
-            nixfmt_rfc = {
-              command = "nixfmt-rfc-style",
-              stdin = true,
-            },
-          },
-          formatters_by_ft = {
-            nix = { "nixfmt_rfc" }
-          }
-        })
-
-        -- Setup diagnostics UI
-        require("telescope").setup {
-          defaults = {
-            file_ignore_patterns = { "node_modules", ".git" },
-            path_display = { "truncate" },
-            layout_strategy = "horizontal",
-          },
-          pickers = {
-            find_files = {
-              cwd = vim.fn.expand('%:p:h') -- Open in the current file's directory
-            },
-            live_grep = {
-              cwd = vim.fn.expand('%:p:h')
-            }
-          }
-        }
-        require("trouble").setup {}
-
-        -- Setup Git integration
-        require("gitsigns").setup {
-          signs = {
-            add          = { text = "│" },
-            change       = { text = "│" },
-            delete       = { text = "_" },
-            topdelete    = { text = "‾" },
-            changedelete = { text = "~" },
-          },
-          numhl = false,
-          linehl = false,
-          watch_gitdir = {
-            interval = 1000,
-            follow_files = true
-          },
-          attach_to_untracked = true,
-        }
-
-        -- Setup NERDTree to open in the current project directory
-        vim.g.NERDTreeChDirMode = 2
-        vim.api.nvim_create_autocmd("VimEnter", {
-          callback = function()
-            if vim.fn.argc() == 0 then
-              vim.cmd("NERDTree")
-              vim.cmd("wincmd p")
-            end
-          end
-        })
-
-        -- Keybindings
-        vim.keymap.set("n", "<leader>ff", function() vim.lsp.buf.format() end, { desc = "Format file" })
-        vim.keymap.set("n", "<leader>td", "<cmd>TroubleToggle<cr>", { desc = "Toggle diagnostics" })
-        vim.keymap.set("n", "<leader>fs", "<cmd>Telescope find_files<cr>", { desc = "Search files in current folder" })
-        vim.keymap.set("n", "<leader>nt", "<cmd>NERDTreeToggle<cr>", { desc = "Toggle NERDTree" })
-        vim.keymap.set("n", "<leader>gb", "<cmd>Gitsigns toggle_current_line_blame<cr>", { desc = "Toggle Git blame" })
-        vim.keymap.set("n", "<leader>bn", "<cmd>bn<cr>", { desc = "Next buffer" })
-        vim.keymap.set("n", "<leader>bp", "<cmd>bp<cr>", { desc = "Previous buffer" })
-        vim.keymap.set("n", "<leader>bd", "<cmd>bd<cr>", { desc = "Close buffer" })
-        EOF
       '';
     };
 

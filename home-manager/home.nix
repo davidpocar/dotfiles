@@ -1,6 +1,10 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
 
-  imports = [ ./programs.nix ./ideavim.nix ];
+  imports = [
+    ./programs.nix
+    ./ideavim.nix
+  ];
 
   home = {
     username = "david";
@@ -54,6 +58,10 @@
   ];
 
   programs.home-manager.enable = true;
+
+  # home.sessionVariables = {
+  #
+  # };
 
   home.stateVersion = "23.11";
 }

@@ -7,12 +7,20 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nvchad4nix = {
+      url = "github:nix-community/nix4nvchad";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { nixpkgs, home-manager, ... }:
+    { nixpkgs, home-manager, ... }@inputs:
     let
       system = "x86_64-linux";
+      extraSpecialArgs = {
+        inherit system;
+        inherit inputs;
+      };
     in
     {
       nixosConfigurations = {
@@ -23,10 +31,14 @@
             ./nixos/configuration.nix
             home-manager.nixosModules.home-manager
             {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.david = import ./home-manager/home.nix;
-              home-manager.backupFileExtension = "backup69";
+              home-manager = {
+                inherit extraSpecialArgs;
+
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                users.david = import ./home-manager/home.nix;
+                backupFileExtension = "backup69";
+              };
             }
           ];
         };
