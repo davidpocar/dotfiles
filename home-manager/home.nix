@@ -1,8 +1,10 @@
 { pkgs, ... }:
 {
-
   imports = [
-    ./programs.nix
+    ./zsh.nix
+    ./kitty.nix
+    ./nvchad.nix
+    ./git.nix
     ./ideavim.nix
   ];
 
@@ -26,9 +28,7 @@
     wget
     openssl
 
-    flameshot
     libreoffice-fresh
-
     btop
     iotop
     iftop
